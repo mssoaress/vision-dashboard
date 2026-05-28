@@ -5,7 +5,7 @@ import { signInWithEmailAndPassword,
          onAuthStateChanged }                from 'https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js';
 
 onAuthStateChanged(auth, user => {
-  if (user) window.location.href = 'dashboard.html';
+  if (user) window.location.href = 'index.html';
 });
 
 const form     = document.getElementById('loginForm');
@@ -24,7 +24,7 @@ form?.addEventListener('submit', async e => {
 
   try {
     await signInWithEmailAndPassword(auth, email, password);
-    window.location.href = 'dashboard.html';
+    window.location.href = 'index.html';
   } catch (err) {
     setLoading(false);
     errorMsg.textContent = mapError(err.code);
