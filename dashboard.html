@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="theme-color" content="#1D3C8A">
+  <title>Dashboard — Vision Jeans</title>
+  <link rel="stylesheet" href="css/dashboard.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="dash-layout">
+
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <button class="sidebar-close-btn" id="sidebarClose" aria-label="Fechar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+    <div class="sidebar-brand">
+      <div class="sidebar-logo-wrap">
+        <img src="img/logo.png" alt="Vision Jeans" class="sidebar-logo">
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section-label">Menu</div>
+      <button class="nav-item active" data-page="overview">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+        Visão Geral
+      </button>
+      <button class="nav-item" data-page="pedidos">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
+        Pedidos
+        <span class="nav-badge" id="newOrdersBadge" style="display:none;">0</span>
+      </button>
+      <button class="nav-item" data-page="relatorio">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Relatório
+      </button>
+      <button class="nav-item" data-page="vendedoras">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        Vendedoras
+      </button>
+      <button class="nav-item" data-page="produtos">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+        Produtos
+      </button>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="user-avatar" id="userAvatar">V</div>
+        <div style="overflow:hidden;">
+          <div class="user-name"  id="userName">Vendedora</div>
+          <div class="user-email" id="userEmail">—</div>
+        </div>
+      </div>
+      <button class="nav-item" id="logoutBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sair
+      </button>
+    </div>
+  </aside>
+
+  <main class="dash-main">
+    <div class="dash-topbar">
+      <div class="topbar-left">
+        <button class="topbar-hamburger" id="topbarHamburger">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div class="topbar-breadcrumb">
+          Vision Jeans
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><polyline points="9 18 15 12 9 6"/></svg>
+          <strong id="topbarPageName">Visão Geral</strong>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <a href="#" target="_blank" class="btn btn-ghost btn-sm">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          Ver Loja
+        </a>
+      </div>
+    </div>
+
+    <!-- OVERVIEW -->
+    <div class="dash-page active" id="page-overview">
+      <div class="page-header">
+        <div><h2 class="page-title">Visão Geral</h2><div class="page-sub" id="overviewDate">—</div></div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card navy"><div><div class="stat-label">Total de Pedidos</div><div class="stat-value" id="statTotal">—</div><div class="stat-sub">todos os status</div></div><div class="stat-icon icon-navy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg></div></div>
+        <div class="stat-card info"><div><div class="stat-label">Pedidos Novos</div><div class="stat-value" id="statNovos">—</div><div class="stat-sub">aguardando ação</div></div><div class="stat-icon icon-info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div></div>
+        <div class="stat-card success"><div><div class="stat-label">Entregues</div><div class="stat-value" id="statEntregues">—</div><div class="stat-sub">concluídos</div></div><div class="stat-icon icon-success"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div></div>
+        <div class="stat-card warning"><div><div class="stat-label">Produtos</div><div class="stat-value" id="statProdutos">—</div><div class="stat-sub">no catálogo</div></div><div class="stat-icon icon-warning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg></div></div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-header">
+          <span class="dash-card-title">Pedidos Recentes</span>
+          <button class="btn btn-ghost btn-sm" data-page="pedidos">Ver todos</button>
+        </div>
+        <div class="table-wrap">
+          <table><thead><tr><th>Cliente</th><th>Produto</th><th>Vendedora</th><th>Status</th><th>Data</th></tr></thead>
+          <tbody id="recentOrdersBody"><tr><td colspan="5"><div class="empty-state"><p>Carregando...</p></div></td></tr></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- PEDIDOS -->
+    <div class="dash-page" id="page-pedidos">
+      <div class="page-header">
+        <div><h2 class="page-title">Pedidos</h2><div class="page-sub">Clique em um pedido para ver detalhes e gerenciar.</div></div>
+      </div>
+      <div class="dash-card">
+        <div class="filters-bar" id="ordersFilters">
+          <button class="filter-chip active" data-status="all">Todos</button>
+          <button class="filter-chip" data-status="novo">Novos</button>
+          <button class="filter-chip" data-status="processando">Processando</button>
+          <button class="filter-chip" data-status="enviado">Enviado</button>
+          <button class="filter-chip" data-status="entregue">Entregue</button>
+          <button class="filter-chip" data-status="cancelado">Cancelado</button>
+        </div>
+        <div class="table-wrap orders-table-wrap">
+          <table>
+            <thead><tr>
+              <th>Cliente</th><th>Telefone</th><th>Produto</th>
+              <th class="td-hide-mobile">Tam.</th><th class="td-hide-mobile">Qtd</th>
+              <th>Vendedora</th><th>Status</th>
+              <th class="td-hide-mobile">Data</th><th>Ações</th>
+            </tr></thead>
+            <tbody id="ordersTableBody"><tr><td colspan="9"><div class="empty-state"><p>Carregando...</p></div></td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- RELATÓRIO -->
+    <div class="dash-page" id="page-relatorio">
+      <div class="page-header">
+        <div><h2 class="page-title">Relatório</h2><div class="page-sub">Análise completa de vendas e desempenho.</div></div>
+      </div>
+      <div class="report-summary">
+        <div class="report-stat">
+          <div class="report-stat-label">Total Geral</div>
+          <div class="report-stat-value" id="reportTotal">—</div>
+          <div class="report-stat-sub" id="reportTotalSub">— pedidos</div>
+        </div>
+        <div class="report-stat">
+          <div class="report-stat-label">Esta Semana</div>
+          <div class="report-stat-value" id="reportWeek">—</div>
+          <div class="report-stat-sub" id="reportWeekSub">— pedidos</div>
+        </div>
+        <div class="report-stat">
+          <div class="report-stat-label">Este Mês</div>
+          <div class="report-stat-value" id="reportMonth">—</div>
+          <div class="report-stat-sub" id="reportMonthSub">— pedidos</div>
+        </div>
+        <div class="report-stat">
+          <div class="report-stat-label">Ticket Médio</div>
+          <div class="report-stat-value" id="reportAvg">—</div>
+          <div class="report-stat-sub">por pedido</div>
+        </div>
+      </div>
+      <div class="report-grid">
+        <div class="report-card">
+          <div class="report-card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            Vendas por Mês (últimos 6 meses)
+          </div>
+          <div class="report-chart-wrap"><canvas id="chartMonthly"></canvas></div>
+        </div>
+        <div class="report-card">
+          <div class="report-card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 2v10l6 4"/></svg>
+            Pedidos por Status
+          </div>
+          <div class="report-chart-wrap"><canvas id="chartStatus"></canvas></div>
+        </div>
+        <div class="report-card">
+          <div class="report-card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/></svg>
+            Vendas por Vendedora
+          </div>
+          <div class="report-chart-wrap"><canvas id="chartVendedoras"></canvas></div>
+        </div>
+        <div class="report-card">
+          <div class="report-card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Pedidos por Semana (últimas 8 semanas)
+          </div>
+          <div class="report-chart-wrap"><canvas id="chartWeekly"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VENDEDORAS -->
+    <div class="dash-page" id="page-vendedoras">
+      <div class="page-header">
+        <div><h2 class="page-title">Vendedoras</h2><div class="page-sub">Clique em uma vendedora para ver o relatório completo.</div></div>
+      </div>
+      <div id="vendedorasGrid" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-bottom:24px;"></div>
+      <div class="dash-card">
+        <div class="dash-card-header"><span class="dash-card-title">Todos os Pedidos Atribuídos</span></div>
+        <div class="table-wrap">
+          <table><thead><tr><th>Vendedora</th><th>Cliente</th><th>Produto</th><th>Valor</th><th>Status</th></tr></thead>
+          <tbody id="vendedorasTableBody"><tr><td colspan="5"><div class="empty-state"><p>Carregando...</p></div></td></tr></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUTOS -->
+    <div class="dash-page" id="page-produtos">
+      <div class="page-header">
+        <div><h2 class="page-title">Produtos</h2><div class="page-sub">Cadastre, edite e remova produtos do catálogo.</div></div>
+        <button class="btn btn-primary" id="newProductBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Novo Produto
+        </button>
+      </div>
+      <div class="dash-card">
+        <div id="adminProductsGrid" class="admin-grid"><div style="padding:40px;text-align:center;color:var(--text-muted);font-size:13px;">Carregando...</div></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ORDER DETAIL MODAL -->
+<div class="modal-overlay" id="orderDetailModal">
+  <div class="modal" style="max-width:520px;">
+    <div class="modal-header">
+      <h3>Detalhes do Pedido</h3>
+      <button class="modal-close" id="closeOrderDetail">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <!-- Cliente -->
+      <div class="od-section">
+        <div class="od-section-title">Cliente</div>
+        <div class="od-row"><span class="od-label">Nome</span><span class="od-value" id="odNome">—</span></div>
+        <div class="od-row"><span class="od-label">WhatsApp</span><a class="od-value navy" id="odTelLink" href="#" target="_blank" id="odTelefone">—</a></div>
+      </div>
+      <!-- Produto -->
+      <div class="od-section">
+        <div class="od-section-title">Produto</div>
+        <div class="od-row"><span class="od-label">Nome</span><span class="od-value" id="odProduto">—</span></div>
+        <div class="od-row"><span class="od-label">Preço</span><span class="od-value big navy" id="odPreco">—</span></div>
+        <div class="od-row"><span class="od-label">Tamanho</span><span class="od-value" id="odTamanho">—</span></div>
+        <div class="od-row"><span class="od-label">Quantidade</span><span class="od-value" id="odQtd">—</span></div>
+        <div class="od-row"><span class="od-label">Observações</span><span class="od-value" id="odObs">—</span></div>
+      </div>
+      <!-- Gestão -->
+      <div class="od-section">
+        <div class="od-section-title">Gestão</div>
+        <div class="od-row">
+          <span class="od-label">Vendedora</span>
+          <select class="status-select" id="odVendedora" style="min-width:140px;">
+            <option value="">— Atribuir —</option>
+            <option value="Yasmim">Yasmim</option>
+            <option value="Beatriz">Beatriz</option>
+            <option value="Julia">Julia</option>
+          </select>
+        </div>
+        <div class="od-row">
+          <span class="od-label">Status</span>
+          <select class="status-select" id="odStatus" style="min-width:140px;">
+            <option value="novo">Novo</option>
+            <option value="processando">Processando</option>
+            <option value="enviado">Enviado</option>
+            <option value="entregue">Entregue</option>
+            <option value="cancelado">Cancelado</option>
+          </select>
+        </div>
+        <div class="od-row"><span class="od-label">Data do Pedido</span><span class="od-value" id="odData">—</span></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" id="cancelOrderDetail">Fechar</button>
+      <button class="btn btn-primary" id="saveOrderDetail">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
+        Salvar Alterações
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- VENDEDORA DETAIL MODAL -->
+<div class="modal-overlay" id="vendedoraDetailModal">
+  <div class="modal" style="max-width:620px;">
+    <div class="modal-header">
+      <h3 id="vdModalTitle">Relatório da Vendedora</h3>
+      <button class="modal-close" id="closeVendedoraDetail">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="vd-hero">
+        <div class="vd-avatar-lg" id="vdAvatar">V</div>
+        <div>
+          <div class="vd-hero-name" id="vdNome">—</div>
+          <div class="vd-hero-sub" id="vdSub">—</div>
+        </div>
+      </div>
+      <div class="vd-stats">
+        <div class="vd-stat"><div class="vd-stat-label">Total Vendido</div><div class="vd-stat-value" id="vdTotal">—</div></div>
+        <div class="vd-stat"><div class="vd-stat-label">Pedidos</div><div class="vd-stat-value" id="vdCount">—</div></div>
+        <div class="vd-stat"><div class="vd-stat-label">Entregues</div><div class="vd-stat-value" id="vdEntregues">—</div></div>
+        <div class="vd-stat"><div class="vd-stat-label">Em Andamento</div><div class="vd-stat-value" id="vdAndamento">—</div></div>
+      </div>
+      <div class="vd-charts">
+        <div class="vd-chart-card">
+          <div class="vd-chart-label">Pedidos por Status</div>
+          <div class="vd-chart-wrap"><canvas id="chartVdStatus"></canvas></div>
+        </div>
+        <div class="vd-chart-card">
+          <div class="vd-chart-label">Vendas por Mês</div>
+          <div class="vd-chart-wrap"><canvas id="chartVdMonthly"></canvas></div>
+        </div>
+      </div>
+      <div class="vd-orders-title">Todos os Pedidos</div>
+      <div class="vd-orders-list" id="vdOrdersList"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" id="cancelVendedoraDetail">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCT MODAL -->
+<div class="modal-overlay" id="productModal">
+  <div class="modal" style="max-width:520px;">
+    <div class="modal-header">
+      <h3 id="productModalTitle">Novo Produto</h3>
+      <button class="modal-close" id="closeProductModal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="productId">
+      <div class="form-group">
+        <label for="productName">Nome do Produto *</label>
+        <input type="text" id="productName" placeholder="Ex: Calça Slim Escura">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;">
+        <div class="form-group" style="grid-column:1/3;">
+          <label for="productPrice">Preço (R$) *</label>
+          <input type="number" id="productPrice" placeholder="0.00" step="0.01" min="0">
+        </div>
+        <div class="form-group">
+          <label for="productStock">Estoque</label>
+          <input type="number" id="productStock" placeholder="—" min="0">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="productCategory">Categoria</label>
+        <input type="text" id="productCategory" placeholder="Ex: Slim, Skinny, Flare...">
+      </div>
+      <div class="form-group">
+        <label for="productDesc">Descrição</label>
+        <textarea id="productDesc" placeholder="Descreva o produto, tecido, caimento..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Tamanhos Disponíveis</label>
+        <div style="background:var(--bg-hover);border:1px solid var(--border);border-radius:var(--radius);padding:16px;display:flex;flex-direction:column;gap:14px;">
+          <div>
+            <div style="font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">Numérico</div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+              <label class="size-check-label"><input type="checkbox" class="size-cb" value="36"> 36</label>
+              <label class="size-check-label"><input type="checkbox" class="size-cb" value="38"> 38</label>
+              <label class="size-check-label"><input type="checkbox" class="size-cb" value="40"> 40</label>
+              <label class="size-check-label"><input type="checkbox" class="size-cb" value="42"> 42</label>
+              <label class="size-check-label"><input type="checkbox" class="size-cb" value="44"> 44</label>
+              <label class="size-check-label"><input type="checkbox" class="size-cb" value="46"> 46</label>
+              <label class="size-check-label"><input type="checkbox" class="size-cb" value="48"> 48</label>
+            </div>
+          </div>
+          <div style="border-top:1px solid var(--border);padding-top:14px;">
+            <div style="font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;">Por Letra</div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+              <label class="size-check-label"><input type="checkbox" class="size-cb" value="P"> P</label>
+              <label class="size-check-label"><input type="checkbox" class="size-cb" value="M"> M</label>
+              <label class="size-check-label"><input type="checkbox" class="size-cb" value="G"> G</label>
+              <label class="size-check-label"><input type="checkbox" class="size-cb" value="GG"> GG</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Imagem (opcional)</label>
+        <div class="upload-zone" id="uploadZone">
+          <input type="file" id="productImage" accept="image/*">
+          <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <div class="upload-label">Clique ou arraste · <span>selecionar arquivo</span></div>
+          <div class="upload-hint">JPG, PNG, WebP · máx. 5MB</div>
+        </div>
+        <div class="upload-preview" id="uploadPreview"><img id="previewImg" src="" alt="Preview"></div>
+        <div id="currentImageWrap" style="display:none;margin-top:10px;">
+          <img id="currentImage" src="" style="width:100%;max-height:160px;object-fit:cover;border-radius:var(--radius-sm);">
+          <p style="font-size:11px;color:var(--text-muted);margin-top:4px;">Imagem atual. Selecione outra para substituir.</p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" id="cancelProductBtn">Cancelar</button>
+      <button class="btn btn-primary" id="saveProductBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        Salvar
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE MODAL -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal" style="max-width:380px;">
+    <div class="modal-header">
+      <h3>Excluir Produto</h3>
+      <button class="modal-close" id="closeDeleteModal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:14px;color:var(--text-secondary);line-height:1.7;">
+        Tem certeza que deseja excluir <strong id="deleteProductName" style="color:var(--text-primary);"></strong>? Esta ação não pode ser desfeita.
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" id="cancelDeleteBtn">Cancelar</button>
+      <button class="btn btn-danger" id="confirmDeleteBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>
+        Excluir
+      </button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script type="module" src="js/dashboard.js"></script>
+</body>
+</html>
