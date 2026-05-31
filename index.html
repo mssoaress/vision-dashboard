@@ -10,7 +10,6 @@
   <title>Dashboard — Vision Jeans</title>
   <link rel="stylesheet" href="css/dashboard.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <link rel="icon" type="image/png" href="img/logo.png">
 </head>
 <body>
 <div class="dash-layout">
@@ -104,7 +103,7 @@
           <button class="btn btn-ghost btn-sm" data-page="pedidos">Ver todos</button>
         </div>
         <div class="table-wrap">
-          <table><thead><tr><th>Cliente</th><th>Produto</th><th>Vendedora</th><th>Status</th><th>Data</th></tr></thead>
+          <table><thead><tr><th>Código</th><th>Cliente</th><th>Vendedora</th><th>Status</th><th>Data</th></tr></thead>
           <tbody id="recentOrdersBody"><tr><td colspan="5"><div class="empty-state"><p>Carregando...</p></div></td></tr></tbody></table>
         </div>
       </div>
@@ -116,6 +115,7 @@
         <div><h2 class="page-title">Pedidos</h2><div class="page-sub">Clique em um pedido para ver detalhes e gerenciar.</div></div>
       </div>
       <div class="dash-card">
+        <!-- Status filters -->
         <div class="filters-bar" id="ordersFilters">
           <button class="filter-chip active" data-status="all">Todos</button>
           <button class="filter-chip" data-status="novo">Novos</button>
@@ -124,11 +124,26 @@
           <button class="filter-chip" data-status="entregue">Entregue</button>
           <button class="filter-chip" data-status="cancelado">Cancelado</button>
         </div>
+        <!-- Search + Date filters -->
+        <div style="display:flex;gap:10px;padding:12px 20px;background:var(--bg-card);border-bottom:1px solid var(--border);flex-wrap:wrap;align-items:center;">
+          <div style="position:relative;flex:1;min-width:180px;">
+            <svg style="position:absolute;left:11px;top:50%;transform:translateY(-50%);width:14px;height:14px;stroke:var(--text-muted);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input type="text" id="filterCliente" placeholder="Buscar cliente..." style="padding:8px 12px 8px 34px;font-size:13px;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg-hover);width:100%;outline:none;color:var(--text-primary);">
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+            <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);">De</label>
+            <input type="date" id="filterDateFrom" style="padding:8px 12px;font-size:13px;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg-hover);outline:none;color:var(--text-primary);">
+            <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);">até</label>
+            <input type="date" id="filterDateTo" style="padding:8px 12px;font-size:13px;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg-hover);outline:none;color:var(--text-primary);">
+            <button id="clearFilters" class="btn btn-ghost btn-sm" style="font-size:11px;">Limpar</button>
+          </div>
+        </div>
         <div class="table-wrap orders-table-wrap">
           <table>
             <thead><tr>
-              <th>Cliente</th><th>Telefone</th><th>Produto</th>
-              <th class="td-hide-mobile">Tam.</th><th class="td-hide-mobile">Qtd</th>
+              <th>Código</th><th>Cliente</th><th>Telefone</th>
+              <th class="td-hide-mobile">Itens</th>
+              <th class="td-hide-mobile">Total</th>
               <th>Vendedora</th><th>Status</th>
               <th class="td-hide-mobile">Data</th><th>Ações</th>
             </tr></thead>
@@ -230,9 +245,12 @@
 
 <!-- ORDER DETAIL MODAL -->
 <div class="modal-overlay" id="orderDetailModal">
-  <div class="modal" style="max-width:520px;">
+  <div class="modal" style="max-width:620px;">
     <div class="modal-header">
-      <h3>Detalhes do Pedido</h3>
+      <div>
+        <h3 id="odCodigo">Pedido</h3>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:3px;" id="odData">—</div>
+      </div>
       <button class="modal-close" id="closeOrderDetail">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
@@ -242,16 +260,17 @@
       <div class="od-section">
         <div class="od-section-title">Cliente</div>
         <div class="od-row"><span class="od-label">Nome</span><span class="od-value" id="odNome">—</span></div>
-        <div class="od-row"><span class="od-label">WhatsApp</span><a class="od-value navy" id="odTelLink" href="#" target="_blank" id="odTelefone">—</a></div>
-      </div>
-      <!-- Produto -->
-      <div class="od-section">
-        <div class="od-section-title">Produto</div>
-        <div class="od-row"><span class="od-label">Nome</span><span class="od-value" id="odProduto">—</span></div>
-        <div class="od-row"><span class="od-label">Preço</span><span class="od-value big navy" id="odPreco">—</span></div>
-        <div class="od-row"><span class="od-label">Tamanho</span><span class="od-value" id="odTamanho">—</span></div>
-        <div class="od-row"><span class="od-label">Quantidade</span><span class="od-value" id="odQtd">—</span></div>
+        <div class="od-row"><span class="od-label">WhatsApp</span><a class="od-value navy" id="odTelLink" href="#">—</a></div>
         <div class="od-row"><span class="od-label">Observações</span><span class="od-value" id="odObs">—</span></div>
+      </div>
+      <!-- Itens do pedido com preço editável -->
+      <div class="od-section">
+        <div class="od-section-title">Itens do Pedido</div>
+        <div id="odItensList"></div>
+        <div class="od-row" style="margin-top:10px;border-top:2px solid var(--border);padding-top:10px;">
+          <span class="od-label" style="font-size:13px;color:var(--text-primary);">Total</span>
+          <span class="od-value big navy" id="odTotal">—</span>
+        </div>
       </div>
       <!-- Gestão -->
       <div class="od-section">
@@ -260,9 +279,9 @@
           <span class="od-label">Vendedora</span>
           <select class="status-select" id="odVendedora" style="min-width:140px;">
             <option value="">— Atribuir —</option>
-            <option value="Yasmim">Yasmim</option>
             <option value="Beatriz">Beatriz</option>
             <option value="Julia">Julia</option>
+            <option value="Yasmim">Yasmim</option>
           </select>
         </div>
         <div class="od-row">
@@ -275,7 +294,6 @@
             <option value="cancelado">Cancelado</option>
           </select>
         </div>
-        <div class="od-row"><span class="od-label">Data do Pedido</span><span class="od-value" id="odData">—</span></div>
       </div>
     </div>
     <div class="modal-footer">
@@ -388,18 +406,15 @@
         </div>
       </div>
       <div class="form-group">
-        <label>Imagem (opcional)</label>
+        <label>Fotos do Produto (opcional)</label>
         <div class="upload-zone" id="uploadZone">
-          <input type="file" id="productImage" accept="image/*">
+          <input type="file" id="productImage" accept="image/*" multiple>
           <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-          <div class="upload-label">Clique ou arraste · <span>selecionar arquivo</span></div>
-          <div class="upload-hint">JPG, PNG, WebP · máx. 5MB</div>
+          <div class="upload-label">Clique ou arraste · <span>selecionar fotos</span></div>
+          <div class="upload-hint">JPG, PNG, WebP · múltiplas fotos · máx. 5MB cada</div>
         </div>
-        <div class="upload-preview" id="uploadPreview"><img id="previewImg" src="" alt="Preview"></div>
-        <div id="currentImageWrap" style="display:none;margin-top:10px;">
-          <img id="currentImage" src="" style="width:100%;max-height:160px;object-fit:cover;border-radius:var(--radius-sm);">
-          <p style="font-size:11px;color:var(--text-muted);margin-top:4px;">Imagem atual. Selecione outra para substituir.</p>
-        </div>
+        <!-- Grid de prévia das novas fotos + fotos existentes -->
+        <div class="upload-grid" id="uploadGrid"></div>
       </div>
     </div>
     <div class="modal-footer">

@@ -2293,3 +2293,163 @@ a,
     padding: 10px 12px;
   }
 }
+
+
+/* ====================================================
+   ORDER ITEMS LIST (modal)
+   ==================================================== */
+.od-item {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.od-item:last-child {
+  border-bottom: none;
+}
+
+.od-item-info {
+  min-width: 0;
+}
+
+.od-item-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.od-item-size {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.od-item-qty {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--bg-hover);
+  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+  white-space: nowrap;
+}
+
+.od-price-input {
+  width: 110px;
+  padding: 6px 10px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy);
+  background: var(--bg-hover);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  text-align: right;
+  outline: none;
+  transition: border-color var(--transition);
+}
+
+.od-price-input:focus {
+  border-color: var(--navy);
+  box-shadow: 0 0 0 3px var(--navy-dim);
+  background: var(--bg-card);
+}
+
+.od-item-subtotal {
+  font-size: 12px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  text-align: right;
+  min-width: 70px;
+}
+
+/* Filter search input focus */
+#filterCliente:focus,
+#filterDateFrom:focus,
+#filterDateTo:focus {
+  border-color: var(--navy) !important;
+  box-shadow: 0 0 0 3px var(--navy-dim);
+  background: var(--bg-card) !important;
+}
+
+/* Order code badge */
+.order-code {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--navy);
+  background: var(--navy-dim);
+  border: 1px solid rgba(29, 60, 138, 0.18);
+  border-radius: var(--radius-sm);
+  padding: 3px 8px;
+  white-space: nowrap;
+}
+
+
+/* ====================================================
+   MULTI-IMAGE UPLOAD GRID
+   ==================================================== */
+.upload-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.upload-thumb {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1.5px solid var(--border);
+  background: var(--bg-hover);
+}
+
+.upload-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.upload-thumb-remove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 22px;
+  height: 22px;
+  background: rgba(196, 58, 58, 0.85);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  border: none;
+  transition: background var(--transition);
+}
+
+.upload-thumb-remove:hover {
+  background: var(--danger);
+}
+
+.upload-thumb-main {
+  position: absolute;
+  bottom: 4px;
+  left: 4px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: var(--navy);
+  color: #fff;
+  border-radius: 3px;
+  padding: 2px 5px;
+}
